@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import static Util.ConsoleColor.*;
+
 public class DbConnection {
 
     private static Connection connection;
@@ -17,7 +19,7 @@ public class DbConnection {
 
         try (InputStream input = DbConnection.class.getClassLoader().getResourceAsStream("db.properties")) {
             if (input == null) {
-                throw new SQLException("Sorry, db.properties file not found in classpath.");
+                throw new SQLException(RED+"Sorry, db.properties file not found in classpath."+RESET);
             }
 
             Properties props = new Properties();
@@ -33,7 +35,7 @@ public class DbConnection {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new SQLException("Failed to load database db.properties.");
+            throw new SQLException(RED+"Failed to load database db.properties."+RESET);
         }
     }
 }

@@ -4,17 +4,19 @@ import Util.InputUtil;
 
 import java.sql.SQLException;
 
+import static Util.ConsoleColor.*;
+
 public class Main {
 
     public static void main(String[] args) throws SQLException {
         boolean exit = false;
 
-        System.out.println("===================================");
-        System.out.println("  Welcome to Hotel Booking System");
-        System.out.println("===================================");
+        System.out.println(BOLD + WHITE+"-----------------------------------"+RESET);
+        System.out.println(BOLD + BLUE +"  Welcome to Hotel Booking System"+RESET);
+        System.out.println(BOLD + WHITE+"-----------------------------------"+RESET);
 
         while (!exit) {
-            System.out.println("\n--- Main Menu ---");
+            System.out.println(BOLD + CYAN+"\n--- Main Menu ---"+RESET);
             System.out.println("1. Login as Admin");
             System.out.println("2. Continue as Guest");
             System.out.println("3. Exit");
@@ -32,7 +34,7 @@ public class Main {
                     System.out.println("Thank you for using our Hotel Booking System!");
                     break;
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println(RED+"Invalid choice. Please try again."+RESET);
             }
         }
     }

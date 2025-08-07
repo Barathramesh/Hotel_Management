@@ -5,20 +5,22 @@ import Util.InputUtil;
 
 import java.sql.SQLException;
 
+import static Util.ConsoleColor.*;
+
 public class AdminMenu {
     public static void showAdminMenu() throws SQLException {
-        System.out.println("\n--- Admin Login ---");
+        System.out.println(BOLD + CYAN+"\n--- Admin Login ---"+RESET);
         String username = InputUtil.getString("Username: ");
         String password = InputUtil.getString("Password: ");
 
         if (!AdminService.login(username, password)) {
-            System.out.println("Login failed.Invalid username or password!!!");
+            System.out.println(RED+"Login failed.Invalid username or password!!!"+RESET);
             return;
         }
 
         boolean flag = false;
         while (!flag) {
-            System.out.println("\n------ Admin Menu -----");
+            System.out.println(BOLD + CYAN+"\n------ Admin Menu -----"+RESET);
             System.out.println("1. Add Room");
             System.out.println("2. Remove Room");
             System.out.println("3. View All Rooms");
@@ -32,7 +34,7 @@ public class AdminMenu {
                 case 3 -> AdminService.viewAllRooms();
                 case 4 -> AdminService.viewAllBookings();
                 case 5 -> flag = true;
-                default -> System.out.println("Invalid choice.");
+                default -> System.out.println(RED+"Invalid choice."+RESET);
             }
         }
     }

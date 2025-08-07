@@ -49,7 +49,7 @@ public class Booking {
     @Override
     public String toString() {
         return "Customer Name: " + customerName + ", Email: " + email + ", Phone Number: "
-        + phoneNumber +", Room #: " + roomNumber +", Room Type: " + type + ",\nPrice: " + price
+        + phoneNumber +", Room Number: " + roomNumber +", Room Type: " + type + ",\nPrice: " + price
         + ", CheckIn: " + checkin + ", CheckOut: " + checkout;
     }
 }
