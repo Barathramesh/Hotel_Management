@@ -27,7 +27,7 @@ public class UserMenu {
                 if(UserService.SignupUser(username,password))
                     System.out.println("You have successfully signed in now Login into the system.");
                 else
-                    System.out.println("Please try again later");
+                    System.out.println("You have already signed in please login!!");
             }
         }
 
@@ -37,14 +37,20 @@ public class UserMenu {
             System.out.println("1. View Available Rooms");
             System.out.println("2. Book a Room");
             System.out.println("3. View My Booking");
-            System.out.println("4. Exit to Main Menu");
+            System.out.println("4. Make Payment and Checkout");
+            System.out.println("5. Cancel My Booking");
+//            System.out.println("6. Update My Booking (Change Room or Dates)");
+            System.out.println("7. Exit to Main Menu");
+            ;
             int choice = InputUtil.getInt("Enter your choice: ");
 
             switch (choice) {
                 case 1 -> UserService.viewAvailableRooms();
                 case 2 -> UserService.bookRoom();
                 case 3 -> UserService.viewMyBooking();
-                case 4 -> flag = true;
+                case 4 -> UserService.makePayment();
+                case 5 -> UserService.cancelMyroom();
+                case 7 -> flag = true;
                 default -> System.out.println("Invalid choice.");
             }
         }

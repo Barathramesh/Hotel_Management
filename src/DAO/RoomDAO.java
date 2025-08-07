@@ -71,15 +71,6 @@ public class RoomDAO {
        return available;
     }
 
-
-//    public static Room getRoomByNumber(int roomNumber) {
-//
-//        for (Room room : roomList) {
-//            if (room.getRoomNumber() == roomNumber) return room;
-//        }
-//        return null;
-//    }
-
     public static Room getRoomByNumber(int roomNumber) throws SQLException {
         String query = "SELECT * FROM rooms WHERE room_number = ?";
         Connection con = DbConnection.getConnection();
@@ -98,11 +89,11 @@ public class RoomDAO {
         return room;
     }
 
-    public static void setAvailable(int roomNumber) throws SQLException {
+    public static void setAvailable(boolean flag,int roomNumber) throws SQLException {
         String query = "Update rooms SET is_available = ? WHERE room_number = ?";
         Connection con = DbConnection.getConnection();
         PreparedStatement pst = con.prepareStatement(query);
-        pst.setBoolean(1, false);
+        pst.setBoolean(1, flag);
         pst.setInt(2, roomNumber);
         pst.executeUpdate();
     }
