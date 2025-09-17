@@ -4,7 +4,9 @@ import com.project.Hotel.Management.Repository.RoomRepository;
 import com.project.Hotel.Management.Repository.UserRepository;
 import com.project.Hotel.Management.model.Room;
 import com.project.Hotel.Management.model.User;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -24,6 +26,7 @@ public class UserService {
         this.userRepository = userRepository;
         this.roomRepository = roomRepository;
         this.bookingService = bookingService;
+
     }
 
     public boolean login(String username, String password) throws SQLException {
@@ -32,7 +35,8 @@ public class UserService {
 
     public boolean SignupUser(String username, String password) throws SQLException {
         if(!userRepository.existsByUsername(username)) {
-            User user = new User(username,password);
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+            User user = new User(username,passwordEncoder.encode(password));
             userRepository.save(user);
             return true;
         }
@@ -55,9 +59,10 @@ public class UserService {
                 );
             }
         }
+
     }
 
-    public void bookRoom() throws SQLException {
+    public void bookRoom() throws SQLException, MessagingException {
         bookingService.bookRoom();
     }
 

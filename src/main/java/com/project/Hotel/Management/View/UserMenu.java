@@ -2,6 +2,7 @@ package com.project.Hotel.Management.View;
 
 import com.project.Hotel.Management.Service.UserService;
 import com.project.Hotel.Management.Util.InputUtil;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ public class UserMenu {
     UserService userService;
 
 
-    public void showUserMenu() throws SQLException {
+    public void showUserMenu() throws SQLException, MessagingException {
         while(true) {
             System.out.println(BOLD + CYAN+"\n--- User Login ---"+RESET);
             System.out.println("1. Log in.");

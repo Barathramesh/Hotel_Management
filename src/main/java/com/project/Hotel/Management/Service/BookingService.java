@@ -7,6 +7,7 @@ import com.project.Hotel.Management.Util.InputUtil;
 import com.project.Hotel.Management.model.Booking;
 import com.project.Hotel.Management.model.Room;
 import com.project.Hotel.Management.model.Transaction;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -24,15 +25,19 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final RoomRepository roomRepository;
     private final TransactionRepository transactionRepository;
+    private final EmailService emailService;
+    private final PdfService pdfService;
 
-    public BookingService(BookingRepository bookingRepository, RoomRepository roomRepository, TransactionRepository transactionRepository) {
+    public BookingService(BookingRepository bookingRepository, RoomRepository roomRepository, TransactionRepository transactionRepository, EmailService emailService, otpService otpService, EmailService emailService1, PdfService pdfService) {
         this.bookingRepository = bookingRepository;
         this.roomRepository = roomRepository;
         this.transactionRepository = transactionRepository;
+        this.emailService = emailService1;
+        this.pdfService = pdfService;
     }
 
 
-    public void bookRoom() throws SQLException {
+    public void bookRoom() throws SQLException, MessagingException {
         System.out.println(BOLD + CYAN+"\n--- Room Booking ---"+RESET);
         List<Room> availableRooms = roomRepository.findByisAvailableTrue();
         if (availableRooms.isEmpty()) {
@@ -90,9 +95,6 @@ public class BookingService {
             }
             System.out.println(java.time.Duration.between(checkIn, checkOut).toHours());
 
-            room.setAvailable(false);
-            roomRepository.save(room);
-
             String bookingnum = bookingNumber();
 
             Booking booking = new Booking();
@@ -107,6 +109,17 @@ public class BookingService {
             booking.setCheckOut(checkOut);
 
             bookingRepository.save(booking);
+
+            room.setAvailable(false);
+            roomRepository.save(room);
+
+            String subject  = "Room booking";
+            String text = "Your room booked successfully and your booking id is: "+bookingnum;
+            pdfService.generateInvoice(name, roomNumber, room.getPrice(),bookingnum);
+
+            emailService.sendInvoiceEmail(email,"Booking Receipt","Your booking receipt is listed below",bookingnum);
+            emailService.sendEmail(email,subject,text);
+
             System.out.println(GREEN+"Your room booked successfully and your booking id is !"+RESET+bookingnum);
         }
     }
@@ -163,6 +176,7 @@ public class BookingService {
                 paymentMethod = "Cash";
                 paymentSuccess = true;
                 System.out.println(GREEN+"Cash payment received. Thank you for staying with us!"+RESET);
+                emailService.sendEmail(booking.getEmail(),"Payment Successfully","Cash payment received. Thank you for staying with us!");
             } else if (choice == 2) {
                 System.out.println(YELLOW+"Redirecting to Online Payment Gateway..."+RESET);
                 try {
@@ -172,6 +186,7 @@ public class BookingService {
                 }
                 paymentMethod = "Online";
                 paymentSuccess = true;
+                emailService.sendEmail(booking.getEmail(),"Online payment","Choose an online payment,Online payment successful. Thank you for using our service!");
                 System.out.println(GREEN+"Online payment successful. Thank you for using our service!"+RESET);
             } else {
                 System.out.println(RED+"Invalid payment option. Payment failed."+RESET);
@@ -194,9 +209,12 @@ public class BookingService {
 
     public void cancelMyroom() throws SQLException {
         String bookingId = InputUtil.getString("Enter your booking number:");
+        String email = InputUtil.getValidEmail("Enter your registered email id:");
+
 
         if (bookingRepository.deleteByBookingNumber(bookingId) > 0) {
             System.out.println(GREEN+"Room cancelled successfully"+RESET);
+            emailService.sendEmail(email,"Cancellation of Room","Your room was cancelled successfully!!!");
         } else {
             System.out.println(RED+"Invalid booking number or no record is found!!!"+RESET);
         }
